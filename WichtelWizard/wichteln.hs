@@ -49,16 +49,14 @@ secretsantas = [herp, derpina]
 -- Gives a random element of a given list.
 -- WATCH OUT: Uses unsafePerformIO
 randomElement :: [a] -> a
-randomElement as = p_head $ p_drop x as 
-	where 
-	x = unsafePerformIO $ randomRIO (0, (Prelude.length as) - 1)
+randomElement as = do x <- unsafePerformIO $ randomRIO (0, (Prelude.length as) - 1)
+                      p_head $ p_drop x as  
+	 
 
 -- Randomizes a given list using randomElement from above.
 shuffleList :: (Eq a) => [a] -> [a]
 shuffleList [] = []
-shuffleList xs = a:(shuffleList $ Prelude.filter (/=a) xs) 
-	where
-	a = randomElement xs 
+shuffleList xs = let a = randomElement xs in a:(shuffleList $ Prelude.filter (/=a) xs) 
 
 -- Takes a list of Participants (should be shuffled) and matches them.
 -- The last element gets the first one, the first the second and so on...
